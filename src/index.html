@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="./default-page.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<body>
+
+<header>
+  <h1>Fire Engineering Inspection Report Editor</h1>
+  <div class="top">
+    <a href="#" id="menu_button" class="menu_icon" onclick="showMenu()">
+      <i class="material-icons">dehaze</i>
+    </a>
+  </div>
+</header>
+
+<nav class="menu">
+  <img src="../FEIR/svg/file.svg" class="open_report_modal" title="Open report">
+
+
+  <!-- Open Report Modal -->
+  <div id="building_id_modal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="form-popup" id="building_id_form">
+<!--        <h1 id="modal-box-title">Open an Inspection Report</h1>-->
+        <div class="modal-box-content">
+          <label><b>Enter a building identifier:</b></label>
+          <form id="bid_form" action="../FEIR/table.html">
+            <input type="text" placeholder="e.g. UNSW01" name="building_ID" id="building_id_input" required>
+            <button type="submit" class="submit_id_btn">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<img id="arrow-icon" src="./arrow.png">
+<div id="welcome-text">
+  <div id="welcome-text-title">Welcome to the FEIR Editor</div>
+  <div id="welcome-text-subtext">Open the side menu to get started!</div>
+</div>
+
+<script>
+  function showMenu() {
+    $("nav.menu").toggleClass("menu_show");
+}
+
+  // Get the modal
+  var modal = document.getElementById("building_id_modal");
+
+  // Get the button that opens the modal
+  var btn = document.getElementsByClassName("open_report_modal")[0];
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks the button, open the modal
+  let onclickButton = function() {
+    modal.style.display = "block";
+  };
+  btn.addEventListener('click', onclickButton);
+
+  // When the user clicks on <span> (x), close the modal
+  const onclickClose = function() {
+    modal.style.display = "none";
+  };
+  span.addEventListener('click', onclickClose);
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+</script>
+
+
+
+<footer></footer>
+
+<script type="module" src="./default-page.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+</body>
+</html>

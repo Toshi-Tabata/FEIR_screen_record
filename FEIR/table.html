@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="./table.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+</head>
+
+<body id="body">
+<!--<header>-->
+<!--    <h1>Fire Engineering Inspection Report Editor</h1>-->
+<!--    <div class="top">-->
+<!--        <a href="#" id="menu_button" class="menu_icon" onclick="showMenu()">-->
+<!--            <i class="material-icons">dehaze</i>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</header>-->
+<div id="divham">
+
+    <div id="hamburgerMenu">
+        <head>
+            <link rel="stylesheet" type="text/css" href="../src/default-page.css">
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body id="body1">
+        <header>
+            <h1>Fire Engineering Inspection Report Editor</h1>
+            <div class="top">
+                <a href="#" id="menu_button" class="menu_icon" onclick="showMenu()">
+                    <i class="material-icons">dehaze</i>
+                </a>
+            </div>
+        </header>
+        <nav class="menu">
+            <!--            open report button unnecessary in FEIR report-->
+            <!--            <a href="#" class="open_report_modal">OPEN REPORT</a>-->
+            <img class="screenshot-icon choose-window" src="./svg/menu.svg" id="start" title="Choose window to capture">&nbsp;
+            <img class="screenshot-icon screenshot-take" src="./svg/photo-camera.svg" onclick="capture()" title="Take screenshot">
+            <img class="screenshot-icon screenshot-view" src="./svg/folder.svg" id="sSModal" title="View screenshots">
+
+        </nav>
+        <script>
+            function showMenu() {
+                $("nav.menu").toggleClass("menu_show");
+            }
+        </script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+        </body>
+    </div>
+    <!--&lt;!&ndash;Creates Hamburger Menu TODO: Append utility functions and HTML templates&ndash;&gt;-->
+
+    <!--&lt;!&ndash;imports HTML file containing template elements&ndash;&gt;-->
+    <!--<link rel="import" href="htmlElementTemplates.html" id="hamID">-->
+
+
+    <!--    this doesn't work cuz cors policy-->
+    <!--&lt;!&ndash;imports utility functions&ndash;&gt;-->
+    <!--<script src="utils.js"></script>-->
+    <!--<script>-->
+    <!--    const body1 = document.getElementById("divham");-->
+    <!--    // getExternalElement is my own function from utils.js-->
+    <!--    body1.appendChild(getExternalElement("hamburgerMenu", "hamID"))-->
+    <!--</script>-->
+    <!--&lt;!&ndash;End of Hamburger Menu&ndash;&gt;-->
+
+    <h2>
+
+    </h2>
+</div>
+
+<table id="FEIRTable">
+    <tr>
+        <th>Mitigation Measure</th>
+        <th>Observation</th>
+        <th>Action Rising</th>
+    </tr>
+        <tr id="mMRow" style="display: none;">
+            <td>Mitigation Measure 1</td>
+            <td>
+                <div class="col-75">
+                    <textarea id="subject" name="observation" placeholder="Enter observation text here"></textarea>
+                </div>
+            </td>
+            <td>
+                <div class="col-75">
+                    <textarea id="subject-aa" name="action-arising" placeholder="Enter action arising text here"></textarea>
+                </div>
+            </td>
+        </tr>
+    </form>
+</table>
+</body>
+
+<!--Ends recording (and TODO: will submit report)-->
+<form action="../src/index.html">
+    <button id="submit">submit</button>
+</form>
+
+
+<!--FEIR Report table handling-->
+<script>
+    let input = {
+        performanceSolutions: []
+    };
+    $.ajaxSetup({
+        async: false
+    });
+    $.getJSON('performanceSolutions.json', (data) => {
+        input = data;
+    });
+    // parsing URL to obtain building ID
+    let url_string = window.location.href;
+    let url = new URL(url_string);
+
+    // returns the string provided from the building ID
+    let buildingID = url.searchParams.get("building_ID");
+
+    let mMRow = document.getElementById("mMRow");  // finding mitigation measures (mM) row ID
+    let FEIRTable = document.getElementById("FEIRTable"); // gets the whole table ID
+    let pSArray = input.performanceSolutions;
+
+    // TODO: DtsNonCompliance column
+    pSArray.forEach(function(item){
+        if (item.buildingIdentifier === buildingID){
+            // forEach loop, populate rows from correct building ID's mitigation measure
+            item.mitigationMeasures.forEach(function(item){
+                console.log(item);
+                var clonedRow = mMRow.cloneNode(true); // clones mM row
+                clonedRow.style = "";  // reveals the row
+                // changes mM row's heading with item.measure
+                clonedRow.getElementsByTagName("td")[0].innerText = item.measure;
+                clonedRow.querySelector("#subject").value = item.observation;
+                // changes aA row's heading with item.actionArising
+                // clonedRow.getElementsByTagName("td")[2].innerText = item.actionArising;
+                clonedRow.querySelector("#subject-aa").value = item.actionArising;
+                FEIRTable.appendChild(clonedRow);  // appends to end of the table:
+            });
+        } else console.log("mismatched, checking next");
+    });
+    // Need to nest below forEach loop within another forEach loop
+    document.querySelector("h2").innerText = pSArray[0].buildingName;
+</script>
+
+<!--Submit report by scouring table for textareas-->
+<script>
+    function saveReport() {
+        let observations = [];
+        let actionsArising = [];
+        $("textarea").each((index, element) => {
+            console.log(index);
+            console.log(element.value);
+
+            // Skip first two elements (template fields)
+            if (index < 2) {
+                return true;
+            }
+            if (index % 2 === 0) {
+                observations.push(element.value);
+            } else if (index % 2 === 1) {
+                actionsArising.push(element.value);
+            }
+        });
+        console.log("Observations:", observations);
+        console.log("actionsArising:", actionsArising);
+        pSArray.forEach(ps => {
+            const numMitMeasures = ps.mitigationMeasures.length;
+            if (ps.buildingIdentifier === buildingID && numMitMeasures === observations.length && numMitMeasures === actionsArising.length) {
+                ps.mitigationMeasures.forEach((mm, index) => {
+                    if (observations[index]) {
+                        console.log("Writing", mm.observation, "to be", observations[index]);
+                        mm.observation = observations[index];
+                    } else {
+                        mm.observation = null;
+                    }
+                    if (actionsArising[index]) {
+                        console.log("Writing", mm.actionArising, "to be", actionsArising[index]);
+                        mm.actionArising = actionsArising[index];
+                    } else {
+                        mm.actionArising = null;
+                    }
+                })
+            }
+        });
+        console.log(input);
+        // TODO: Send API request to save
+    }
+
+    let submitButton = document.getElementById("submit");
+    submitButton.addEventListener('click', () => {
+        saveReport()
+    })
+</script>
+
+<body>
+<main>
+    <ul id="recordings"></ul>
+</main>
+<script>
+    // executes after page loaded
+    // window.addEventListener('DOMContentLoaded', () => {
+    submitButton = document.getElementById("submit");
+    const list = document.getElementById("recordings");
+
+    // MIME type we're using (audio/webm/video)
+    const mimeType = "video/mp4";
+    let chunks = [];
+
+    // we need to load the try{} block after media is supplied, otherwise a new recorder is made without
+    // any stream given to it, meaning nothing is recorded upon pressing record
+    // activateCapture.onclick = function() { // force user to click this button after giving media stream
+    function recordStream(stream){
+        try {
+            //creating new MediaRecorder
+            const recorder = new MediaRecorder(stream, {Type: mimeType});
+
+            // Creating event listener for MediaRecorder
+            // This emits events e.g. dataavailable, which is emitted periodically while recording
+            // push dataavailable contain "chunk"s of the recording
+            // push chunks onto chunks array
+            recorder.addEventListener('dataavailable', event => {
+                if (typeof event.data === 'undefined') return;
+                if (event.data.size === 0) return;
+                chunks.push(event.data);
+            });
+
+            // when stop event occurs, gather chunks in to a Blob
+            // Can play with <video> element and reset chunk array
+            recorder.addEventListener('stop', () => {
+                const recording = new Blob(chunks, {
+                    type: mimeType
+                });
+                renderRecording(recording, list);
+                chunks = [];
+            });
+
+            recorder.start();
+            // When submit button pressed, stops recording
+            submitButton.addEventListener('click', () => {
+                recorder.stop();
+            });
+        } catch {
+            console.log("error");
+        }
+
+        // Render recordings into <video> elements which is disabled by commenting out
+        // Then provide download link
+        // Taking Blob, then turning it into a URL (URL.createObjectURL) method
+        // Use this URL as src of <video> element
+        // Use URL as href of an anchor
+        // Make anchor download file by setting download attribute
+        // Creating DOM elements + making file with appropriate file name (using current time)
+        function renderRecording(blob, list) {
+            const blobUrl = URL.createObjectURL(blob);
+            const li = document.createElement('li');
+            const video = document.createElement('video');
+            const anchor = document.createElement('a');
+            const modalArea = document.getElementById("modalArea");
+            anchor.setAttribute('href', blobUrl);
+            const now = new Date();
+            anchor.setAttribute("download", "recording-" + formatDownloadDate() + ".mp4");
+            anchor.innerText = " Download Recording-" + formatDownloadDate() + ".mp4";
+
+            // Commented out '.' it only shows video stream
+            // video.setAttribute('src', blobUrl);
+            // video.setAttribute('controls', 'controls');
+            // li.appendChild(video);
+            li.appendChild(anchor);
+            list.appendChild(li);
+            modalArea.appendChild(list)
+        }
+    }
+</script>
+
+<video hidden id="video" autoplay></video>
+
+
+<!--<br>-->
+<!--<strong>Log:</strong>-->
+<!--<br>-->
+<!--<pre id="log"></pre>-->
+
+<script>
+    const videoElem = document.getElementById("video");
+    // const logElem = document.getElementById("log");
+    const startElem = document.getElementById("start");
+    let videoStream = null;
+
+    // Set event listeners for the start and stop buttons
+    startElem.addEventListener("click", function(evt) {
+        startCapture();
+    }, false);
+
+
+    // Change this from submitButton if we don't wish to end screen grab upon submitting, or remove it entirely
+    submitButton.addEventListener("click", function(evt) {
+        stopCapture();
+    }, false);
+    //
+    // console.log = msg => logElem.innerHTML += `${msg}<br>`;
+    // console.error = msg => logElem.innerHTML += `<span class="error">${msg}</span><br>`;
+    // console.warn = msg => logElem.innerHTML += `<span class="warn">${msg}<span><br>`;
+    // console.info = msg => logElem.innerHTML += `<span class="info">${msg}</span><br>`;
+
+    async function startCapture() {
+        // logElem.innerHTML = "";
+
+        try {
+            videoStream = await navigator.mediaDevices.getDisplayMedia({video:true, audio:true})
+                .then(function(stream){
+                    videoElem.srcObject = stream;
+                    return stream
+                })
+                .then(function(stream){
+                    recordStream(stream);
+                    return stream
+                })
+                .catch(function(err){
+                    console.log(err);
+                });
+            // dumpOptionsInfo();
+        } catch(err) {
+            console.error("Error: " + err);
+        }
+    }function stopCapture(evt) {
+        // dumpOptionsInfo();
+        let tracks = videoElem.srcObject.getTracks();
+
+        tracks.forEach(track => track.stop());
+        videoStream = null;
+    }function dumpOptionsInfo() {
+        const videoTrack = videoStream.getVideoTracks()[0];
+
+        console.info("Track settings:");
+        console.info(JSON.stringify(videoTrack.getSettings(), null, 2));
+        console.info("Track constraints:");
+        console.info(JSON.stringify(videoTrack.getConstraints(), null, 2));
+    }
+</script>
+
+<script>
+
+    // i=0
+    // Upon clicking screenshot, a new canvas (id="canvas" + i) is made using newCanvas()
+    // The screenshot is created in this canvas0
+    // i is incremented with increment(), and this repeats (i=1)
+    let i = 0;
+    function increment(i){
+        i++;
+        return i
+    }
+
+    function capture() {
+
+        let video = document.getElementById('video');
+
+        // new Canvas made and appended to a list in canvasList
+        const canvasList = document.getElementById("canvasList");
+        let id = "canvas" + i;
+        const newCanvas = document.createElement("canvas");
+        let node = document.createElement("LI");
+        newCanvas.setAttribute("id", id);
+        newCanvas.setAttribute("style", "overflow:auto");
+        node.appendChild(newCanvas);
+        canvasList.appendChild(node);
+
+        // Creating 1/10 image to the newly made canvas === list of thumbnail
+        let myThumbnail = document.getElementById("canvas" + i);
+        myThumbnail.width = video.videoWidth/10;
+        myThumbnail.height = video.videoHeight/10;
+
+        // without above, below would crop image, rather than resize
+        myThumbnail.getContext("2d").drawImage(video, 0, 0, video.videoWidth/10, video.videoHeight/10);
+
+        // creating a new full resolution image
+        let myCanvas = document.getElementById("canvas");
+        myCanvas.width = video.videoWidth;
+        myCanvas.height = video.videoHeight;
+        myCanvas.getContext("2d").drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
+        // turn full-res image into a blob
+        let img = new Image();
+        myCanvas.toBlob(function(blob){
+            img.src = URL.createObjectURL(blob);  // create a URL for the blob
+
+            // creates the download under each element
+            let download = document.createElement("a");
+            download.innerText= "Download\nImage-" + formatDownloadDate() + ".png";
+            download.setAttribute("download", "image-" + formatDownloadDate() + ".png");
+            node.appendChild(download);
+            download.setAttribute("href", img.src);
+
+            // upon clicking thumbnail, do work
+            myThumbnail.onclick = function(){
+                let myImageModal = document.getElementById("myImageModal");
+                let modalImg = document.getElementById("img01");
+                let modalDownload = document.getElementById("imgModalDownload");
+
+                // displays an image inside a modal on top of the thumbnail modal
+                myImageModal.style.display = "block";
+                modalImg.src = img.src;
+
+                // creates a download link to the image (identical to the download under each element above)
+                modalDownload.innerHTML = "image-" + formatDownloadDate() + ".png";  //TODO: format so it isn't off the side
+                modalDownload.setAttribute("href", img.src);
+                modalDownload.setAttribute("download", "image-" + formatDownloadDate() + ".png")
+            }
+        });
+
+        // increment canvas (thumbnail) ID to be appended to the thumbnail list
+        i=increment(i);
+    }
+</script>
+
+
+<!--// This used to be for my own screenshot tool. It doesn't rely on a displayed canvas but doesn't work-->
+<!--// due to some chrome bug. blob.takePhoto() give err setOptions failed -->
+<!--<button id="screenshot" onclick="useRenderScreenshot()"> screenshot </button>-->
+<!--<script>-->
+<!--    function useRenderScreenshot() {-->
+
+<!--        // getting the first videoTrack of the MediaStream.getVideoTracks array-->
+<!--        var foo = videoStream.getVideoTracks()[0];-->
+<!--        // Technically not a blob, should be an imageObject-->
+<!--        console.log(foo);-->
+<!--        var blob = new window.ImageCapture(foo);-->
+<!--        console.log(blob);-->
+<!--        blob.takePhoto()-->
+<!--            .then(blob => {-->
+<!--                renderScreenshot(blob, list);-->
+<!--            })-->
+<!--            .catch(function err(err) {-->
+<!--            console.log(err);-->
+<!--        });-->
+<!--    }-->
+<!--    function renderScreenshot(blob, list) {-->
+<!--        const li = document.createElement("li");-->
+<!--        const newBlobURL = URL.createObjectURL(blob);-->
+<!--        const screenshotURL = document.createElement("a");-->
+<!--        screenshotURL.setAttribute("href", newBlobURL);-->
+<!--        const now = new Date();-->
+<!--        screenshotURL.setAttribute(-->
+<!--            'download',-->
+<!--            `recording-${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDay().toString().padStart(2, '0')}&#45;&#45;${now.getHours().toString().padStart(2, '0')}-${now.getMinutes().toString().padStart(2, '0')}-${now.getSeconds().toString().padStart(2, '0')}.png`-->
+<!--        );-->
+<!--        screenshotURL.innerText = "Download Image";-->
+<!--        li.appendChild(screenshotURL);-->
+<!--        list.appendChild(li)-->
+<!--    }-->
+<!-- </script> }-->
+</body>
+
+<!--Modal Functions and Display-->
+<body>
+<meta name="viewport" content = "width=device-width, initial-scale=1">
+<style>
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+<p>
+    <div id="sSModalMenu" class="modal">
+        <div class="modal-content">
+<!--            TODO: make this close properly-->
+            <span class="close" id="closeThumbnail">&times;</span>
+
+<p id="modalArea">Saved Screenshots and Recordings</p>
+
+
+<!-- This styling forces the thumbnails to populate horizontally first-->
+<!-- TODO: give spacing between them -->
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333333;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 16px;
+        text-decoration: none;
+    }
+
+    li a:hover {
+        background-color: #111111;
+    }
+</style>
+
+<!-- This is the list that displays all the thumbnails-->
+<ul id="canvasList"></ul>
+
+</div>
+</div>
+</p>
+
+<script>
+    let span = document.getElementById("closeThumbnail");
+    span.onclick = function(event) {
+        modal.style.display = "none";
+    };
+</script>
+
+<script src="utils.js"></script>
+
+<footer></footer>
+
+</body>
+
+<!--set everything to 0 so it shouldn't interfere with anything-->
+<div style="position: absolute; opacity: 0; overflow:hidden; pointer-events: none; height: 0; width: 0;">
+    <canvas id="canvas" style="overflow:hidden"></canvas>
+</div>
+
+
+<!-- This modal must be at the bottom to appear above the other modal -->
+<div id="myImageModal" class="modal">
+
+    <!-- The Close Button -->
+    <span class="close" id = "closeImgModal">&times;</span>
+
+    <!-- Modal Content (The Image) -->
+    <img class="modal-content" id="img01" style="margin-left: 5%">
+
+    <!-- Modal Caption (Image Text) -->
+    <a id="imgModalDownload"></a>
+</div>
+
+<script>
+    let btn = document.getElementById("sSModal");
+
+    // When the user clicks on the button, open the modal
+    btn.onclick = function(){
+        modal.style.display = "block";
+    };
+
+    // Close either modal if area outside of modal is clicked
+    window.onclick = function(event){
+        if (event.target === document.getElementById("myImageModal")){
+            document.getElementById("myImageModal").style.display = "none";
+        }
+        if (event.target === modal){
+            modal.style.display = "none";
+        }
+    };
+
+    // close modal if click x
+    let modal = document.getElementById("sSModalMenu");
+    document.getElementById("closeImgModal").onclick = function(){
+        document.getElementById("myImageModal").style.display = "none";
+    };
+
+    // returns current Date and time: "YYYY-MM-DD-HH-MM-SS"
+    function formatDownloadDate(){
+        let now = new Date();
+        return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}-${now.getHours().toString().padStart(2, '0')}-${now.getMinutes().toString().padStart(2, '0')}-${now.getSeconds().toString().padStart(2, '0')}`
+    }
+
+
+</script>
+
+</html>

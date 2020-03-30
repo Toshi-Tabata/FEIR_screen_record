@@ -1,0 +1,11 @@
+{
+    "BC_API_CONSTANTS": {
+        "BASE_URL": "https://pbc.becode.com.au",
+        "AUTH_TOKEN": "Token f1882e5157d1047c3dd5a6d07740ca6ec240abf7a2ef403a9d2fca6176d74de41ccf95765482cdc0c4501a4a1d92c9b2a8e832b8d9b71b9338bf0e6ca38f599f",
+        "API_URL": "/api/v1",
+        "PERF_SOL_ENDPOINT": "/performance_solutions",
+        "MITIAGTIONS_ENDPOINT": "/mitigations"
+    }
+}
+
+

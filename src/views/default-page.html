@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../default-page.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <body>
+    <header>
+      <h1>PLACEHOLDER TITLE</h1>
+      <div class="top">
+        <a href="#" id="menu_button" class="menu_icon" onclick="showMenu()">
+          <i class="material-icons">dehaze</i>
+        </a>
+      </div>
+    </header>
+
+    <nav class="menu">
+      <a href="#" class="open_report_modal">OPEN REPORT</a>
+
+      <!-- Open Report Modal -->
+      <div id="building_id_modal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <div class="form-popup" id="building_id_form">
+              <h1>Open a Report</h1>
+              <label><b>Building ID</b></label>
+            <form id="bid_form">
+              <input type="text" placeholder="Enter Building ID" name="building_ID" id="building_id_input" required>
+              <button type="submit" class="submit_id_btn">Submit</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </nav>
+
+  <footer></footer>
+
+  <script type="module" src="default-page.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<div id="hamburgerMenu">
+<head>
+    <link rel="stylesheet" type="text/css" href="../src/default-page.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body id="body1">
+<a href="#" id="menu_button" class="menu_icon" onclick="showMenu()">
+    <i class="material-icons">dehaze</i>
+</a>
+<nav class="menu">
+    <a href="#" class="open_report_modal">OPEN REPORT</a>
+</nav>
+<script>
+    function showMenu() {
+        $("nav.menu").toggleClass("menu_show");
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+</body>
+</div>

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='iso-8859-1'?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 231 231" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 231 231">
+  <g>
+    <rect width="33" x="24.5" y="197" height="34"/>
+    <polygon points="190.711,49 156.5,15.379 156.5,49  "/>
+    <rect width="33" x="24.5" height="181"/>
+    <polygon points="140.5,65 140.5,0 73.5,0 73.5,181 206.5,181 206.5,65  "/>
+    <rect width="133" x="73.5" y="197" height="34"/>
+  </g>
+</svg>

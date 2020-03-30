@@ -1,0 +1,176 @@
+body {
+    margin: 0 auto;
+    font-family: Arial;
+}
+
+header {
+    height: 70px;
+    background-color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Make the fonts work TODO */
+
+/*This is for the rest of the header items*/
+
+header > h1 {
+    font-family: Aktiv-Grotesk Bold, Arial Bold, sans-serif;
+    width: calc(100% - 160px);
+    text-align: center;
+    font-size: 20px;
+    color: #D22630;
+}
+header > .top {
+    position: absolute;
+    left: 20px;
+}
+header > .top a.menu_icon i {
+    color: #ffffff;
+    font-size: 40px;
+    padding-top: 5px;
+    transition: .2s ease;
+}
+header > .top a.menu_icon:hover i {
+    color: #888b8d;
+}
+
+/*This is for the modal menu*/
+
+nav.menu {
+    width: 200px;
+    min-height: calc(100vh - 120px);
+    background-color: #888B8D;
+    position: absolute;
+    left: -300px;
+    transition: .3s all;
+}
+nav.menu > a {
+    font-family: Aktiv-Grotesk Bold, Arial Bold, sans-serif;
+    display: block;
+    padding: 5px;
+    margin: 15px 0 0px 20px;
+    color: white;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+
+
+.menu_show {
+    left: 0!important;
+}
+
+@media screen and (max-width: 425px) {
+    header h1 {
+        font-size: 16px;
+    }
+}
+@media screen and (max-width: 360px) {
+    nav.menu {
+        width: 100%;
+        left: -100%;
+    }
+}
+
+.open_report_modal {
+    width: 50px;
+    height: 50px;
+    margin: 40px 50px;
+    cursor: pointer;
+    border: none;
+    border-radius: 25px;
+    padding: 20px;
+    transition-duration: 0.3s;
+}
+
+.open_report_modal:hover {
+    background-color: white;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 20%; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    border-radius: 20px;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    min-width: 400px;
+}
+
+#modal-box-title {
+    font-family: Helvetica Neue, Helvetica, Arial;
+    font-size: 1.5rem;
+    align-text: center;
+}
+
+.modal-box-content {
+    font-family: Helvetica Neue, Helvetica, Arial;
+    margin: 30px;
+    font-size: 1.3rem;
+}
+
+.submit_id_btn {
+    background-color: #D22630;
+    margin: 4px 2px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-decoration: none;
+    pointer-events: auto;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+
+.submit_id_btn:hover {
+    background-color: black;
+    transition-duration: 0.5s;
+}
+
+#building_id_input {
+    border: 1px solid;
+    border-radius: 8px;
+    padding: 10px;
+    height: 20px;
+    width: 300px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#building_id_input:focus {
+    outline: none;
+}
+
+/* The Close open-report */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 100px
+}
